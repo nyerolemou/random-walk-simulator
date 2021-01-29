@@ -9,8 +9,19 @@ class RandomWalk:
 
     def __init__(self, x, y, p_up, p_right, p_down, p_left):
         """
-        Parameters:
+        Args:
+            x: Initial x coordinate in Z.
+            y: Initial y coordinate in Z.
+            p_up: Probability of moving one step up from current state.
+            p_right: Probability of moving one step right from current state.
+            p_down: Probability of moving one step down from current state.
+            p_left: Probability of moving one step left from current state.
 
+        Returns:
+            Returns a RandomWalk object.
+
+        Raises:
+            TypeError: If initial position (x,y) is not in Z^2.
         """
         try:
         	if isinstance(x, int) and isinstance(y, int):
@@ -34,10 +45,22 @@ class RandomWalk:
 
 
     def _next_direction(self):
+        """
+        Finds the next direction based on probabilities.
+
+        Returns:
+            An int from [1,2,3,4].
+        """
         return random.choices(RandomWalk.directions, weights=self.probabilities)[0]
 
 
     def walk(self, num_steps = 1000):
+        """
+        Computes a random walk for given number of steps.
+
+        Args:
+            num_steps: Number of steps in the walk.
+        """
         self.numSteps = num_steps
         for i in range(num_steps):
             next_direction = self._next_direction()
@@ -53,6 +76,9 @@ class RandomWalk:
 
 
     def visualise(self):
+        """
+        Plots animation of the object's random walk.
+        """
         fig = plt.figure()
         plt.title('Random Walk with {} Steps and Probabilities {}'.format(self.numSteps, self.probabilities))
 
@@ -75,6 +101,7 @@ class RandomWalk:
         anim = animation.FuncAnimation(fig, animate, init_func=init,
                                        frames=self.numSteps, interval=50, blit=True)
         plt.show()
+
 
 
 
