@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import seaborn as sns
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
@@ -84,11 +85,17 @@ class RandomWalk:
 
         x = [self.trail[i][0] for i in range(self.numSteps)]
         y = [self.trail[i][1] for i in range(self.numSteps)]
-        xlim = max(x - x[0]*self.numSteps) + 5 + x[0]
-        ylim = max(y - y[0]*self.numSteps) + 5 + y[0]
+        xlim = max([abs(k) for k in x]) + 5
+        ylim = max([abs(k) for k in y]) + 5
 
         ax = plt.axes(xlim=(-xlim, xlim), ylim=(-ylim, ylim))
-        line, = ax.plot([], [], lw=1)
+        ax.set_xticks(np.arange(-xlim,xlim))
+        ax.set_yticks(np.arange(-ylim,ylim))
+        ax.axes.xaxis.set_visible(False)
+        ax.axes.yaxis.set_visible(False)
+        ax.set_facecolor('darkslategrey')
+        #ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
+        line, = ax.plot([], [], lw=1, color='white')
 
         def init():
             line.set_data([x[0]], [y[0]])
