@@ -1,6 +1,6 @@
 # random-walk-simulator
 
-Iteration 1: random walks on a lattice.
+Iteration 1: random walks on an integer lattice.
 
 This should be a simple web-app where a use can input
 - an initial state (starting point)
