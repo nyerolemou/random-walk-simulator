@@ -30,13 +30,15 @@ class RandomWalk:
         	print("the value error is: {}\nthe probabilities specified is {} ".format(exp,prob))
 
         self.trail = [np.array([x,y])]
+        self.numSteps = 1000
 
 
     def _next_direction(self):
         return random.choices(RandomWalk.directions, weights=self.probabilities)[0]
 
 
-    def walk(self, num_steps = 10):
+    def walk(self, num_steps = 1000):
+        self.numSteps = num_steps
         for i in range(num_steps):
             next_direction = self._next_direction()
             if next_direction == 1:
@@ -50,27 +52,33 @@ class RandomWalk:
             self.trail.append(np.copy(self.position))
 
 
+    def visualise(self):
+        fig = plt.figure()
+        plt.title('Random Walk with {} Steps and Probabilities {}'.format(self.numSteps, self.probabilities))
+
+        x = [self.trail[i][0] for i in range(self.numSteps)]
+        y = [self.trail[i][1] for i in range(self.numSteps)]
+        xlim = max(x - x[0]*self.numSteps) + 5 + x[0]
+        ylim = max(y - y[0]*self.numSteps) + 5 + y[0]
+
+        ax = plt.axes(xlim=(-xlim, xlim), ylim=(-ylim, ylim))
+        line, = ax.plot([], [], lw=1)
+
+        def init():
+            line.set_data([x[0]], [y[0]])
+            return line,
+
+        def animate(i):
+            line.set_data(x[0:i], y[0:i])
+            return line,
+
+        anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                       frames=self.numSteps, interval=50, blit=True)
+        plt.show()
+
+
+
 if __name__ == "__main__":
     walk = RandomWalk(0,0,25,25,25,25)
-    walk.walk(10000)
-    trail = walk.trail
-    # First set up the figure, the axis, and the plot element we want to animate
-    fig = plt.figure()
-    ax = plt.axes(xlim=(-50, 50), ylim=(-50, 50))
-    line, = ax.plot([], [], lw=1)
-    x_cords = [trail[i][0] for i in range(len(trail))]
-    y_cords = [trail[i][1] for i in range(len(trail))]
-    # initialization function: plot the background of each frame
-    def init():
-        line.set_data([x_cords[0]],[y_cords[0]])
-        return line,
-
-    # animation function.  This is called sequentially
-    def animate(i):
-        line.set_data(x_cords[0:i],y_cords[0:i])
-        return line,
-
-    # call the animator.  blit=True means only re-draw the parts that have changed.
-    anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                   frames=10000, interval=100, blit=True)
-    plt.show()
+    walk.walk(1000)
+    walk.visualise()
