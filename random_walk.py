@@ -1,13 +1,13 @@
+import os
 import random
 import numpy as np
-import seaborn as sns
 from matplotlib import pyplot as plt
 from matplotlib import animation
 
 
 class RandomWalk:
 
-    directions = [1, 2, 3, 4]
+    directions = {1 : [0, 1], 2 : [1, 0], 3 : [0, -1], 4: [-1, 0]}
 
     def __init__(self, x, y, p_up, p_right, p_down, p_left):
         """
@@ -24,6 +24,7 @@ class RandomWalk:
 
         Raises:
             TypeError: If initial position (x,y) is not in Z^2.
+            ValueError: If probabilities don't sum to 100.
         """
         try:
             if isinstance(x, int) and isinstance(y, int):
@@ -52,9 +53,10 @@ class RandomWalk:
         Finds the next direction based on probabilities.
 
         Returns:
-            An int from [1,2,3,4] = [up, right, down, left].
+            An int from [1, 2, 3, 4] = [up, right, down, left].
         """
-        return random.choices(RandomWalk.directions, weights=self.probabilities)[0]
+        directions = list(RandomWalk.directions.keys())
+        return random.choices(directions, weights=self.probabilities)[0]
 
     def walk(self, num_steps=1000):
         """
@@ -66,14 +68,7 @@ class RandomWalk:
         self.numSteps = num_steps
         for i in range(num_steps):
             next_direction = self._next_direction()
-            if next_direction == 1:
-                self.position += [0, 1]
-            if next_direction == 2:
-                self.position += [1, 0]
-            if next_direction == 3:
-                self.position += [0, -1]
-            if next_direction == 4:
-                self.position += [-1, 0]
+            self.position += RandomWalk.directions[next_direction]
             self.trail.append(np.copy(self.position))
 
     def visualise(self):
@@ -108,11 +103,42 @@ class RandomWalk:
             return line,
 
         anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                       frames=self.numSteps, interval=50, blit=True)
+                                       frames=self.numSteps, interval=2, blit=True)
         plt.show()
+
+        return anim
+
+    def save_vis(self, filename, anim):
+        """
+        Save animation.
+
+        Args:
+            path: Path to save anim to.
+            anim: Animation to save.
+        """
+        # warning: this is slow when saving a long walk.
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=50, metadata=dict(artist='Me'), bitrate=1800)
+        anim.save(os.path.join("animations", filename), writer=writer)
 
 
 if __name__ == "__main__":
-    walk = RandomWalk(0, 0, 30, 20, 25, 25)
-    walk.walk(10000)
-    walk.visualise()
+    walk = RandomWalk(0, 0, 25, 25, 25, 25)
+    walk.walk(5000)
+    anim = walk.visualise()
+    walk.save_vis('test.mp4', anim)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
