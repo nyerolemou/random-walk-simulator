@@ -79,18 +79,20 @@ class RandomWalk:
         fig.suptitle('Random Walk with {} Steps and Probabilities {}'.format(
             self.numSteps, self.probabilities))
 
-        x,y=zip(*self.trail)
-        xlim_max = max(x) + 5
-        xlim_min = min(x) - 5
-        ylim_max = max(y) + 5
-        ylim_min = min(y) - 5
+        x,y=list(zip(*self.trail))
+        xlim_max = max(x)
+        xlim_min = min(x)
+        ylim_max = max(y)
+        ylim_min = min(y)
+        axes_min = min(xlim_min, ylim_min) - 5
+        axes_max = max(xlim_max, ylim_max) + 5
 
-        ax = plt.axes(xlim=(xlim_min, xlim_max), ylim=(ylim_min, ylim_max))
-        ax.set_xlim([xlim_min, xlim_max])
-        ax.set_ylim([ylim_min, ylim_max])
+        ax = plt.axes()
+        ax.set_xlim([axes_min, axes_max])
+        ax.set_ylim([axes_min, axes_max])
         ax.axes.xaxis.set_visible(False)
         ax.axes.yaxis.set_visible(False)
-        #ax.set_aspect('equal', adjustable='box')
+        ax.set_aspect('equal')
         ax.set_facecolor('darkslategrey')
         #ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
         line, = ax.plot([], [], lw=1, color='white')
