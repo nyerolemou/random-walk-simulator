@@ -79,8 +79,7 @@ class RandomWalk:
         plt.title('Random Walk with {} Steps and Probabilities {}'.format(
             self.numSteps, self.probabilities))
 
-        x = [self.trail[i][0] for i in range(self.numSteps)]
-        y = [self.trail[i][1] for i in range(self.numSteps)]
+        x,y=zip(*self.trail)
         xlim_max = max(x) + 5
         xlim_min = min(x) - 5
         ylim_max = max(y) + 5
@@ -127,18 +126,3 @@ if __name__ == "__main__":
     walk.walk(5000)
     anim = walk.visualise()
     walk.save_vis('test.mp4', anim)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
