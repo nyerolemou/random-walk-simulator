@@ -75,8 +75,8 @@ class RandomWalk:
         """
         Plots animation of the object's random walk.
         """
-        fig = plt.figure()
-        plt.title('Random Walk with {} Steps and Probabilities {}'.format(
+        fig = plt.figure(figsize=(7,7))
+        fig.suptitle('Random Walk with {} Steps and Probabilities {}'.format(
             self.numSteps, self.probabilities))
 
         x,y=zip(*self.trail)
@@ -86,9 +86,11 @@ class RandomWalk:
         ylim_min = min(y) - 5
 
         ax = plt.axes(xlim=(xlim_min, xlim_max), ylim=(ylim_min, ylim_max))
+        ax.set_xlim([xlim_min, xlim_max])
+        ax.set_ylim([ylim_min, ylim_max])
         ax.axes.xaxis.set_visible(False)
         ax.axes.yaxis.set_visible(False)
-        ax.set_aspect("equal")
+        #ax.set_aspect('equal', adjustable='box')
         ax.set_facecolor('darkslategrey')
         #ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
         line, = ax.plot([], [], lw=1, color='white')
