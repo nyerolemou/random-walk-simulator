@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <title>Random Walk Simulator</title>
+</head>
+<body>
+   <h1>Play with our random walker!</h1>
+
+   <form method="post">
+    <div class="form-group">
+        <label for="title">Initial Position</label>
+        <input type="text" name="xcoordinate"
+               placeholder="x coordinate" class="form-control"
+               value="{{ request.form['x'] }}"></input>
+        <input type="text" name="ycoordinate"
+               placeholder="y coordinate" class="form-control"
+               value="{{ request.form['ycoordinate'] }}"></input>
+    </div>
+    
+
+    <div class="form-group">
+        <label for="title">Probabilities</label>
+        <input type="text" name="up"
+               placeholder="Up probability" class="form-control"
+               value="{{ request.form['up'] }}"></input>
+        <input type="text" name="right"
+               placeholder="Right probability" class="form-control"
+               value="{{ request.form['right'] }}"></input>
+        <input type="text" name="down"
+               placeholder="Down probability" class="form-control"
+               value="{{ request.form['down'] }}"></input>
+        <input type="text" name="left"
+               placeholder="Left probability" class="form-control"
+               value="{{ request.form['left'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <label for="title">Number of Iterations</label>
+        <input type="text" name="numberofiterations"
+               placeholder="Number of iterations" class="form-control"
+               value="{{ request.form['numberofiterations'] }}"></input>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Walk!</button>
+    </div>
+</form>
+</body>
+</html>
