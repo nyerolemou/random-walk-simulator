@@ -11,34 +11,33 @@
    <form method="post">
     <div class="form-group">
         <label for="title">Initial Position</label>
-        <input type="text" name="xcoordinate"
+        <input type="number" name="xcoordinate"
                placeholder="x coordinate" class="form-control"
-               value="{{ request.form['x'] }}"></input>
-        <input type="text" name="ycoordinate"
+               value="{{ request.form['xcoordinate'] }}"></input>
+        <input type="number" name="ycoordinate"
                placeholder="y coordinate" class="form-control"
                value="{{ request.form['ycoordinate'] }}"></input>
     </div>
-    
 
     <div class="form-group">
         <label for="title">Probabilities</label>
-        <input type="text" name="up"
+        <input type="number" name="up"
                placeholder="Up probability" class="form-control"
                value="{{ request.form['up'] }}"></input>
-        <input type="text" name="right"
+        <input type="number" name="right"
                placeholder="Right probability" class="form-control"
                value="{{ request.form['right'] }}"></input>
-        <input type="text" name="down"
+        <input type="number" name="down"
                placeholder="Down probability" class="form-control"
                value="{{ request.form['down'] }}"></input>
-        <input type="text" name="left"
+        <input type="number" name="left"
                placeholder="Left probability" class="form-control"
                value="{{ request.form['left'] }}"></input>
     </div>
 
     <div class="form-group">
         <label for="title">Number of Iterations</label>
-        <input type="text" name="numberofiterations"
+        <input type="number" name="numberofiterations"
                placeholder="Number of iterations" class="form-control"
                value="{{ request.form['numberofiterations'] }}"></input>
     </div>
