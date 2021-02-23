@@ -1,8 +1,14 @@
 import os
 import random
 import numpy as np
+import matplotlib
+matplotlib.use('agg')
 from matplotlib import pyplot as plt
 from matplotlib import animation
+from celluloid import Camera
+from numpngw import AnimatedPNGWriter
+import io
+from PIL import Image, ImageDraw
 
 
 class RandomWalk:
@@ -94,7 +100,7 @@ class RandomWalk:
         ax.axes.yaxis.set_visible(False)
         ax.set_aspect('equal')
         ax.set_facecolor('darkslategrey')
-        #ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
+        ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
         line, = ax.plot([], [], lw=1, color='white')
 
         def init():
@@ -107,11 +113,67 @@ class RandomWalk:
 
         anim = animation.FuncAnimation(fig, animate, init_func=init,
                                        frames=self.numSteps, interval=2, blit=True)
-        plt.show()
+        #plt.show()
 
-        return anim
+        #camera=Camera(fig)
+        #for i in range(self.numSteps):
+        #    ax.plot(x[0:i],y[0:i], lw=1, color='white')
+        #    camera.snap()
 
-    def save_vis(self, filename, anim):
+        #animation = camera.animate(interval = 50, repeat=False)
+    
+
+        #plt.show()
+        return (anim,fig)
+
+    def visualise_bytesio(self):
+        """
+        Plots animation of the object's random walk.
+        """
+        fig = plt.figure(figsize=(7,7))
+        fig.suptitle('Random Walk with {} Steps and Probabilities {}'.format(
+            self.numSteps, self.probabilities))
+
+        x,y=list(zip(*self.trail))
+        xlim_max = max(x)
+        xlim_min = min(x)
+        ylim_max = max(y)
+        ylim_min = min(y)
+        axes_min = min(xlim_min, ylim_min) - 5
+        axes_max = max(xlim_max, ylim_max) + 5
+
+        ax = plt.axes()
+        ax.set_xlim([axes_min, axes_max])
+        ax.set_ylim([axes_min, axes_max])
+        ax.axes.xaxis.set_visible(False)
+        ax.axes.yaxis.set_visible(False)
+        ax.set_aspect('equal')
+        ax.set_facecolor('darkslategrey')
+        ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
+        
+        camera=Camera(fig)
+        frames=[]
+        for i in range(self.numSteps):
+            ax.plot(x[0:i],y[0:i], lw=1, color='white')
+            fobj = io.BytesIO()
+            fig.savefig(fobj)
+            fobj.seek(0)
+            frame = Image.open(fobj)
+            frames.append(frame)
+
+        # Save the frames as animated GIF to BytesIO
+        animated_gif = io.BytesIO()
+        frames[0].save(animated_gif,
+                       format='GIF',
+                       save_all=True,
+                       append_images=frames[1:],      # Pillow >= 3.4.0
+                       delay=0.1,
+                       loop=0)
+        animated_gif.seek(0)
+        
+        return animated_gif
+
+    def save_vis(self, filename, anim, kwargs):
         """
         Save animation.
 
@@ -120,13 +182,43 @@ class RandomWalk:
             anim: Animation to save.
         """
         # warning: this is slow when saving a long walk.
-        Writer = animation.writers['ffmpeg']
+        Writer = animation.writers['pillow']
         writer = Writer(fps=50, metadata=dict(artist='Me'), bitrate=1800)
-        anim.save(os.path.join("animations", filename), writer=writer)
+        anim.save('test.png', writer=writer,*kwargs)
 
 
 if __name__ == "__main__":
     walk = RandomWalk(0, 0, 25, 25, 25, 25)
-    walk.walk(5000)
-    anim = walk.visualise()
-    walk.save_vis('test.mp4', anim)
+    walk.walk(100)
+    anim, camera = walk.fig_setup()
+    #walk.save_vis('test.png', anim)
+
+    #N = 25          # number of frames
+
+    # Create individual frames
+    #frames = []
+    #for n in range(N):
+    #    frame = Image.new("RGB", (200, 150), (25, 25, 255*(N-n)//N))
+    #    draw = ImageDraw.Draw(frame)
+    #    x, y = frame.size[0]*n/N, frame.size[1]*n/N
+    #    draw.ellipse((x, y, x+40, y+40), 'yellow')
+    #    # Saving/opening is needed for better compression and quality
+    #    fobj = io.BytesIO()
+    #    frame.save(fobj, 'GIF')
+    #    frame = Image.open(fobj)
+    #    frames.append(frame)
+
+    # Save the frames as animated GIF to BytesIO
+    #animated_gif = io.BytesIO()
+    #frames[0].save(animated_gif,
+    #               format='GIF',
+    #               save_all=True,
+    #               append_images=frames[1:],      # Pillow >= 3.4.0
+    #               delay=0.1,
+    #               loop=0)
+    #animated_gif.seek(0,2)
+    #print ('GIF image size = ', animated_gif.tell())
+
+    # Optional: write contents to file
+    #animated_gif.seek(0)
+    #open('animated.gif', 'wb').write(animated_gif.read())
