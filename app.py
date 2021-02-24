@@ -13,19 +13,17 @@ from numpngw import AnimatedPNGWriter
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/',methods=('GET', 'POST'))
 def index():
-		
-	return render_template('index.html')
-
-@app.route("/plot.gif",methods=('GET', 'POST'))
-def plot_walker(numiters,probabilities,position):
-    if request.method == 'GET':
-        return f"The URL /data is accessed directly. Try going to '/form' to submit form"
     if request.method == 'POST':
         position = [int(request.form['xcoordinate']),int(request.form['ycoordinate'])]
         probabilities = [int(request.form['up']),int(request.form['right']),int(request.form['down']),int(request.form['left'])]
         numiters = int(request.form['numberofiterations'])
+    return render_template('index.html')
+
+@app.route("/plot.gif")
+def plot_walker(numiters=100,probabilities=[25,25,25,25],position=[0,0]):
+    
     """ renders the plot on the fly.
     """
     
@@ -82,8 +80,8 @@ def plot_walker(numiters,probabilities,position):
     #               delay=0.1,
     #               loop=0)
     #animated_gif.seek(0)
-    walk = RandomWalk(*position, *probabilities)
-    walk.walk(numiters)
+    walk = RandomWalk(0,0,25,25,25,25)
+    walk.walk(100)
     img= walk.visualise_bytesio()
     return send_file(img, mimetype='image/gif')
     
