@@ -149,9 +149,8 @@ class RandomWalk:
         ax.axes.yaxis.set_visible(False)
         ax.set_aspect('equal')
         ax.set_facecolor('darkslategrey')
-        ax.grid(True, color='silver', linestyle='-', linewidth=0.5)
+        ax.grid(True, color='silver', linestyle='-', linewidth=1)
         
-        camera=Camera(fig)
         frames=[]
         for i in range(self.numSteps):
             ax.plot(x[0:i],y[0:i], lw=1, color='white')
