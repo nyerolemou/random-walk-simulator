@@ -1,15 +1,7 @@
-import io
-import os
-from flask import Flask, render_template, request, url_for, flash, redirect, Response, send_file
+
+from flask import Flask, render_template, request
 from random_walk import RandomWalk
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from matplotlib.backends.backend_svg import FigureCanvasSVG
-from matplotlib.figure import Figure
-from matplotlib import animation
-import random
-from PIL import Image, ImageDraw
 import base64
-from numpngw import AnimatedPNGWriter
 
 app = Flask(__name__)
 
