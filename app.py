@@ -16,7 +16,7 @@ app = Flask(__name__)
 @app.route('/',methods=('GET', 'POST'))
 def index():
     if request.method == 'POST':
-        position = [int(request.form['xcoordinate']),int(request.form['ycoordinate'])]
+        position = [int(request.form.get("xcoordinate")),int(request.form.get("ycoordinate"))]
         probabilities = [int(request.form['up']),int(request.form['right']),int(request.form['down']),int(request.form['left'])]
         numiters = int(request.form['numberofiterations'])
         plot = plot_walker(numiters=numiters, probabilities=probabilities, position=position)
